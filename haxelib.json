@@ -1,0 +1,14 @@
+{
+  "name": "jete",
+  "license": "MIT",
+  "classPath": "src",
+  "tags": ["uhu", "uhx", "type cast", "macro"],
+  "description": "Type casting",
+  "contributors": ["skial"],
+  "releasenote": "Initial Release",
+  "version": "0.0.1-alpha",
+  "url": "https://github.com/skial/jete",
+  "dependencies": {
+    "klas":""
+  }
+}

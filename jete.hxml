@@ -1,0 +1,4 @@
+-lib klas
+-cp src
+-neko bin/jete.n
+-main Main
