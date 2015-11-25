@@ -1,4 +1,5 @@
 -lib klas
+-lib utest
 -cp src
 -neko bin/jete.n
 -main Main
