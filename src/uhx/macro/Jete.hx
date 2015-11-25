@@ -15,15 +15,24 @@ class Jete {
 
 	public static macro function initialize():Void {
 		try {
-			KlasImp.initalize();
-			KlasImp.CLASS_META.set(':rtti', Jete.classHandler);
-			KlasImp.FIELD_META.set(':rtti', Jete.fieldHandler);
+			KlasImp.initialize();
+			KlasImp.classMetadata.add( ':arity', Jete.classHandler );
+			KlasImp.classMetadata.add( ':type', Jete.classHandler );
 			
-			KlasImp.CLASS_META.set('arity', Jete.classArityHandler);
-			KlasImp.FIELD_META.set('arity', Jete.fieldArityHandler);
+			KlasImp.fieldMetadata.add( ':arity', Jete.fieldHandler );
+			KlasImp.fieldMetadata.add( ':type', Jete.fieldHandler );
+			//KlasImp.CLASS_META.set(':rtti', Jete.classHandler);
+			//KlasImp.FIELD_META.set(':rtti', Jete.fieldHandler);
 			
-			KlasImp.CLASS_META.set('type', Jete.classTypeHandler);
-			KlasImp.FIELD_META.set('type', Jete.fieldTypeHandler);
+			KlasImp.classMetadata.add( 'arity', Jete.classArityHandler );
+			KlasImp.fieldMetadata.add( 'arity', Jete.fieldArityHandler );
+			//KlasImp.CLASS_META.set('arity', Jete.classArityHandler);
+			//KlasImp.FIELD_META.set('arity', Jete.fieldArityHandler);
+			
+			KlasImp.classMetadata.add( 'type', Jete.classTypeHandler );
+			KlasImp.fieldMetadata.add( 'type', Jete.fieldTypeHandler );
+			//KlasImp.CLASS_META.set('type', Jete.classTypeHandler);
+			//KlasImp.FIELD_META.set('type', Jete.fieldTypeHandler);
 		} catch (e:Dynamic) {
 			// This assumes that `implements Klas` is not being used
 			// but `@:autoBuild` or `@:build` metadata is being used 
@@ -31,23 +40,38 @@ class Jete {
 		}
 	}
 	
-	public static build():Array<Field> {
-		return handler( Context.getLocalClass().get(), Context.getBuildFields() );
+	public static function build():Array<Field> {
+		return classHandler( Context.getLocalClass().get(), Context.getBuildFields() );
 	}
 	
 	public static function classHandler(cls:ClassType, fields:Array<Field>):Array<Field> {
 		return fields
 			.map( function(f) {
-				f.meta.push( { name:'type', pos:f.pos } );
-				f.meta.push( { name:'arity', pos:f.pos } );
+				if (f.meta.filter( function(m) return m.name == 'type' ).length == 0) {
+					f.meta.push( { name:'type', params:[], pos:f.pos } );
+					
+				}
+				
+				if (f.meta.filter( function(m) return m.name == 'arity' ).length == 0) {
+					f.meta.push( { name:'arity', params:[], pos:f.pos } );
+					
+				}
+				
 				return f;
 			} )
 			.map( fieldHandler.bind( cls, _ ) );
 	}
 	
 	public static function fieldHandler(cls:ClassType, field:Field):Field {
-		field.meta.push( { name:'type', pos:f.pos } );
-		field.meta.push( { name:'arity', pos:f.pos } );
+		if (field.meta.filter( function(m) return m.name == 'type' ).length == 0) {
+			field.meta.push( { name:'type', params:[], pos:field.pos } );
+			
+		}
+		
+		if (field.meta.filter( function(m) return m.name == 'arity' ).length == 0) {
+			field.meta.push( { name:'arity', params:[], pos:field.pos } );
+			
+		}
 		
 		return fieldArityHandler( cls, fieldTypeHandler( cls, field ) );
 	}
@@ -57,7 +81,7 @@ class Jete {
 	}
 	
 	public static function fieldArityHandler(cls:ClassType, field:Field):Field {
-		var meta = field.meta.filter( function(m) return m.name == 'arity' );
+		var meta = field.meta.filter( function(m) return m.name == 'arity' && m.params.length == 0 );
 		
 		if (meta.length > 0) {
 			
@@ -67,7 +91,7 @@ class Jete {
 					
 				case FFun(m):
 					var arity = m.args.length;
-					meta[0].params.push( macro $arity );
+					meta[0].params.push( macro $v { arity } );
 					
 			}
 			
@@ -81,7 +105,7 @@ class Jete {
 	}
 	
 	public static function fieldTypeHandler(cls:ClassType, field:Field):Field {
-		var meta = field.meta.filter( function(m) return m.name == 'type' );
+		var meta = field.meta.filter( function(m) return m.name == 'type' && m.params.length == 0 );
 		
 		if (meta.length > 0) {
 			
@@ -89,13 +113,13 @@ class Jete {
 			
 			switch (field.kind) {
 				case FVar(t, _), FProp(_, _, t, _):
-					meta[0].params.push( Serializer.run( [t] ) );
+					meta[0].params.push( macro $v { Serializer.run( [t] ) } );
 					
 				case FFun(m):
 					var types = [for (a in m.args) a.type];
 					types.push( m.ret );
 					
-					meta[0].params.push( Serializer.run( types ) );
+					meta[0].params.push( macro $v { Serializer.run( types ) } );
 					
 			}
 			
