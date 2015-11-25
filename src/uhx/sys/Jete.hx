@@ -1,7 +1,14 @@
 package uhx.sys;
 
+#if macro
+import haxe.macro.Expr;
+import haxe.macro.Context;
+import haxe.macro.Compiler;
+#end
+
 import haxe.macro.Expr.Expr;
 import haxe.macro.Expr.ComplexType;
+import haxe.macro.Printer;
 
 /**
  * ...
