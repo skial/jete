@@ -40,6 +40,9 @@ class JeteSpec {
 		
 		Assert.equals( 5, Jete.arity( JeteSpecHelper.new.fun ) );
 		Assert.equals( meta.arity[0], Jete.arity( JeteSpecHelper.new.fun ) );
+		
+		Assert.equals( -1, Jete.arity( JeteSpecHelper.a ) );
+		Assert.equals( -1, Jete.arity( JeteSpecHelper.new.b ) );
 	}
 	
 	public function testType() {
@@ -69,11 +72,17 @@ class JeteSpec {
 		Assert.isTrue( types[0].match( macro:String ) );
 		Assert.isTrue( types[1].match( macro:String ) );
 		Assert.isTrue( types[2].match( macro:Array<String> ) );
+		
+		Assert.isTrue( Jete.typeof( JeteSpecHelper.a )[0].match( macro:String ) );
+		Assert.isTrue( Jete.typeof( JeteSpecHelper.new.b )[0].match( macro:Int ) );
 	}
 	
 }
 
 @:arity @:type class JeteSpecHelper {
+	
+	public static var a:String;
+	public var b:Int;
 	
 	public static function statICK(a:String, b:String):Array<String> {
 		return [a, b];
