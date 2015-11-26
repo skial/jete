@@ -84,3 +84,5 @@ In the above example you can see `Jete.arity( Main.add )` and
 `Jete.arity` and `Jete.typeof` can not tell the difference between
 static and instance field access. Adding `new` between your class
 and field name just helps differentiate between the two.
+
+[jete]: https://github.com/skial/jete/blob/master/src/uhx/sys/Jete.hx "Jete.hx"
