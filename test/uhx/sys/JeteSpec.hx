@@ -32,13 +32,22 @@ class JeteSpec {
 		var meta = Meta.getFields( JeteSpec ).ction;
 		Assert.equals( 1, meta.arity[0] );
 		
+		Assert.equals( 1, Jete.arity( JeteSpec.new.ction ) );
+		Assert.equals( meta.arity[0], Jete.arity( JeteSpec.new.ction ) );
+		
 		var meta = Meta.getFields( JeteSpecHelper ).fun;
 		Assert.equals( 5, meta.arity[0] );
+		
+		Assert.equals( 5, Jete.arity( JeteSpecHelper.new.fun ) );
+		Assert.equals( meta.arity[0], Jete.arity( JeteSpecHelper.new.fun ) );
 	}
 	
 	public function testType() {
 		var meta = Meta.getFields( JeteSpec ).ction;
 		Assert.isTrue( (Unserializer.run( meta.type[0] ):Array<ComplexType>)[0].match( macro:String ) );
+		
+		var types = Jete.typeof( JeteSpec.new.ction );
+		Assert.isTrue( types[0].match( macro:String ) );
 		
 		var meta = Meta.getFields( JeteSpecHelper ).fun;
 		Assert.isTrue( (Unserializer.run( meta.type[0] ):Array<ComplexType>)[0].match( macro:Int ) );
@@ -47,11 +56,28 @@ class JeteSpec {
 		Assert.isTrue( (Unserializer.run( meta.type[0] ):Array<ComplexType>)[3].match( macro:Int ) );
 		Assert.isTrue( (Unserializer.run( meta.type[0] ):Array<ComplexType>)[4].match( macro:Int ) );
 		Assert.isTrue( (Unserializer.run( meta.type[0] ):Array<ComplexType>)[5].match( macro:Array<Int> ) );
+		
+		var types = Jete.typeof( JeteSpecHelper.new.fun );
+		Assert.isTrue( types[0].match( macro:Int ) );
+		Assert.isTrue( types[1].match( macro:Int ) );
+		Assert.isTrue( types[2].match( macro:Int ) );
+		Assert.isTrue( types[3].match( macro:Int ) );
+		Assert.isTrue( types[4].match( macro:Int ) );
+		Assert.isTrue( types[5].match( macro:Array<Int> ) );
+		
+		var types = Jete.typeof( JeteSpecHelper.statICK );
+		Assert.isTrue( types[0].match( macro:String ) );
+		Assert.isTrue( types[1].match( macro:String ) );
+		Assert.isTrue( types[2].match( macro:Array<String> ) );
 	}
 	
 }
 
 @:arity @:type class JeteSpecHelper {
+	
+	public static function statICK(a:String, b:String):Array<String> {
+		return [a, b];
+	}
 	
 	public function new() {
 		
