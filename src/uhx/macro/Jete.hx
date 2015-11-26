@@ -21,18 +21,12 @@ class Jete {
 			
 			KlasImp.fieldMetadata.add( ':arity', Jete.fieldHandler );
 			KlasImp.fieldMetadata.add( ':type', Jete.fieldHandler );
-			//KlasImp.CLASS_META.set(':rtti', Jete.classHandler);
-			//KlasImp.FIELD_META.set(':rtti', Jete.fieldHandler);
 			
 			KlasImp.classMetadata.add( 'arity', Jete.classArityHandler );
 			KlasImp.fieldMetadata.add( 'arity', Jete.fieldArityHandler );
-			//KlasImp.CLASS_META.set('arity', Jete.classArityHandler);
-			//KlasImp.FIELD_META.set('arity', Jete.fieldArityHandler);
 			
 			KlasImp.classMetadata.add( 'type', Jete.classTypeHandler );
 			KlasImp.fieldMetadata.add( 'type', Jete.fieldTypeHandler );
-			//KlasImp.CLASS_META.set('type', Jete.classTypeHandler);
-			//KlasImp.FIELD_META.set('type', Jete.fieldTypeHandler);
 		} catch (e:Dynamic) {
 			// This assumes that `implements Klas` is not being used
 			// but `@:autoBuild` or `@:build` metadata is being used 
