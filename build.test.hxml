@@ -1,0 +1,14 @@
+-lib klas
+-lib utest
+-lib jete
+-cp src
+-cp test
+-main uhx.sys.JeteSpec
+
+--each
+
+-neko bin/spec.n
+
+--next
+
+-js bin/spec.js
